@@ -1,0 +1,42 @@
+{
+    "old_version": "1.0.0",
+    "new_version": "2.0.0",
+    "total_changes": 4,
+    "changes": [
+        {
+            "endpoint": "/products",
+            "method": "GET",
+            "severity": "Breaking",
+            "message": "Endpoint GET /products was removed.",
+            "suggestion": "Restore the endpoint or coordinate the removal with API consumers."
+        },
+        {
+            "endpoint": "/users",
+            "method": "GET",
+            "status_code": "200",
+            "field": "email",
+            "severity": "Breaking",
+            "message": "Response field 'email' was removed from GET /users.",
+            "suggestion": "Restore the 'email' field or coordinate the change with API consumers."
+        },
+        {
+            "endpoint": "/users",
+            "method": "GET",
+            "status_code": "200",
+            "field": "id",
+            "old_type": "integer",
+            "new_type": "string",
+            "severity": "Breaking",
+            "message": "Response field 'id' changed type from 'integer' to 'string'.",
+            "suggestion": "Keep the original data type or coordinate the change with API consumers."
+        },
+        {
+            "endpoint": "/users",
+            "method": "POST",
+            "field": "email",
+            "severity": "Potentially Breaking",
+            "message": "Request field 'email' is now required for POST /users.",
+            "suggestion": "Check whether existing clients send this field before making it required."
+        }
+    ]
+}
