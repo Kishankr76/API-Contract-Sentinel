@@ -111,3 +111,15 @@ def test_compare_endpoint_rejects_invalid_request():
 
     assert response.status_code == 422
 
+def test_compare_endpoint_rejects_empty_specifications():
+    response = client.post(
+        "/compare",
+        json={
+            "old_spec": {},
+            "new_spec": {},
+        },
+    )
+
+    assert response.status_code == 422
+    assert "old_spec cannot be empty" in response.json()["detail"][0]["msg"]
+
