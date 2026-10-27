@@ -1,153 +1,305 @@
-# API Contract Sentinel 🛡️
+# API Contract Sentinel
 
-A Python-based tool that compares two versions of an API specification and detects potentially breaking changes.
+### Detect API Breaking Changes Before They Break Your Application
 
-## 📌 Project Overview
+API Contract Sentinel is a Python-based tool that compares two API specifications and identifies changes that may affect backward compatibility.
 
-APIs often change as applications evolve. However, an API change can break existing applications that depend on the previous API contract.
+It helps developers understand what changed between an old and a new API contract by classifying detected changes according to their severity.
 
-**API Contract Sentinel** compares an old and a new OpenAPI specification to identify selected compatibility issues and generate a structured report with explanations and suggested fixes.
+## Problem Statement
 
-## ✨ Features
+When an API changes, existing applications that depend on it may stop working correctly.
 
-* Detect removed API endpoints.
-* Detect removed response fields.
-* Detect changed response field data types.
-* Detect newly required request fields.
-* Classify detected changes as Breaking or Potentially Breaking.
-* Generate a JSON comparison report.
-* Validate JSON specification files.
-* Handle missing files and invalid JSON.
-* Run automated tests using pytest.
+For example:
 
-## 🛠️ Tech Stack
+* An API endpoint is removed.
+* A response field is deleted.
+* A field's data type changes.
+* A previously optional request field becomes required.
 
-* **Language:** Python
-* **Specification Format:** OpenAPI JSON
-* **Testing:** pytest
-* **Version Control:** Git and GitHub
+Detecting these changes before releasing a new API version can help reduce integration issues.
 
-## 📂 Project Structure
+API Contract Sentinel automates the comparison process and generates a structured report of detected changes.
+
+## Features
+
+* **API Specification Comparison:** Compare old and new JSON API specifications.
+* **Removed Endpoint Detection:** Identify endpoints that no longer exist in the new specification.
+* **Removed Response Field Detection:** Find response fields removed from an existing endpoint.
+* **Data Type Change Detection:** Detect changes such as `integer` to `string`.
+* **Newly Required Field Detection:** Identify fields that have become mandatory.
+* **Severity Classification:** Categorize detected changes as Breaking or Potentially Breaking.
+* **Structured Reports:** Generate comparison results in JSON format.
+* **Interactive Web Interface:** Upload specifications and view comparison results through Streamlit.
+* **REST API:** Access the comparison functionality through a FastAPI backend.
+* **Input Validation:** Validate incoming specifications and handle invalid requests.
+* **Automated Testing:** Use pytest to test comparison logic and API endpoints.
+* **Continuous Integration:** Run automated tests through GitHub Actions when code is pushed to the main branch or a pull request targets it.
+
+## Technology Stack
+
+| Technology     | Purpose                                                                         |
+| -------------- | ------------------------------------------------------------------------------- |
+| Python         | Core comparison logic                                                           |
+| FastAPI        | Backend REST API                                                                |
+| Streamlit      | Interactive frontend                                                            |
+| Pydantic       | Request validation                                                              |
+| Requests       | HTTP communication between frontend and backend                                 |
+| JSON           | API specification input and comparison report format                            |
+| PyYAML         | YAML-related dependency; full YAML specification support is not yet implemented |
+| Pytest         | Automated testing                                                               |
+| HTTPX          | Testing FastAPI endpoints                                                       |
+| Git and GitHub | Version control and source code hosting                                         |
+| GitHub Actions | Continuous integration                                                          |
+
+## System Architecture
+
+```text
+              User
+                |
+                v
+       Streamlit Frontend
+          (app.py)
+                |
+                | HTTP POST /compare
+                v
+        FastAPI Backend
+          (api.py)
+                |
+                v
+       Comparison Engine
+       (comparator.py)
+                |
+                v
+      Compare Old and New
+       API Specifications
+                |
+                v
+       Detect API Changes
+                |
+                v
+       Structured JSON Report
+                |
+                v
+       Streamlit Results View
+```
+
+## How It Works
+
+1. The user uploads the old and new API specification files through the Streamlit interface.
+2. The frontend reads the uploaded JSON files.
+3. The frontend sends both specifications to the FastAPI backend using an HTTP POST request.
+4. The backend validates the request using Pydantic.
+5. The comparison engine examines the specifications and identifies supported changes.
+6. The engine classifies detected changes according to severity.
+7. The backend returns the comparison report as JSON.
+8. The frontend displays the results and allows the user to download the report.
+
+## Project Structure
 
 ```text
 API-Contract-Sentinel/
-├── src/
-│   └── api_contract_sentinel/
-│       ├── __init__.py
-│       └── comparator.py
-├── tests/
-│   ├── __init__.py
-│   └── test_comparator.py
-├── examples/
-│   ├── old_api.json
-│   └── new_api.json
-├── docs/
-│   └── comparison_report.json
-├── check_comparator.py
-├── .gitignore
-└── README.md
+|
+|-- .github/
+|   `-- workflows/
+|       `-- tests.yml
+|
+|-- docs/
+|   `-- comparison_report.json
+|
+|-- examples/
+|   |-- old_api.json
+|   `-- new_api.json
+|
+|-- src/
+|   `-- api_contract_sentinel/
+|       |-- __init__.py
+|       |-- api.py
+|       `-- comparator.py
+|
+|-- tests/
+|   |-- __init__.py
+|   |-- test_api.py
+|   `-- test_comparator.py
+|
+|-- app.py
+|-- check_comparator.py
+|-- requirements.txt
+|-- README.md
+`-- .gitignore
 ```
 
-## ⚙️ Requirements
+## Getting Started
 
-* Python 3.13 or a compatible Python version
+### Prerequisites
+
+* Python 3.13
 * Git
+* pip
 
-## 🚀 Installation and Setup
+### 1. Open the project directory
 
-### 1. Clone the repository
+Open a terminal in the project root directory:
 
-```bash
-git clone https://github.com/Kishankr76/API-Contract-Sentinel.git
-cd API-Contract-Sentinel
+```powershell
+cd C:\Users\dkaru\Documents\API-Contract-Sentinel
 ```
 
 ### 2. Create a virtual environment
 
-```bash
+```powershell
 python -m venv .venv
 ```
 
 ### 3. Activate the virtual environment
 
-**Windows PowerShell:**
+For Windows PowerShell:
 
 ```powershell
-.venv\Scripts\Activate.ps1
+.\.venv\Scripts\Activate.ps1
 ```
 
-### 4. Install pytest
+### 4. Install dependencies
 
-```bash
-python -m pip install pytest
+```powershell
+python -m pip install -r requirements.txt
+python -m pip install streamlit requests
 ```
 
-## ▶️ Usage
+### 5. Run the FastAPI backend
 
-Run the comparison script from the project root directory:
+Open the first terminal in the project root and run:
 
-```bash
-python check_comparator.py
+```powershell
+python -m uvicorn src.api_contract_sentinel.api:app --reload
 ```
 
-The tool compares the example specifications in the `examples/` directory and prints the detected changes.
+The backend will be available locally at:
 
-The generated JSON report is saved to:
+* API base: `http://127.0.0.1:8000`
+* Interactive API documentation: `http://127.0.0.1:8000/docs`
+* Health check: `http://127.0.0.1:8000/health`
 
-```text
-docs/comparison_report.json
+Keep this terminal running.
+
+### 6. Run the Streamlit frontend
+
+Open a second terminal in the same project root. Activate the virtual environment if necessary, then run:
+
+```powershell
+python -m streamlit run app.py
 ```
 
-## 🧪 Run Tests
+Streamlit will display a local address in the terminal. Open that address in your browser.
 
-Execute the automated test suite:
+**Note:** The frontend currently uses the local FastAPI backend. Both services must be running for the comparison workflow to work.
 
-```bash
+## API Endpoints
+
+| Method | Endpoint   | Description                            |
+| ------ | ---------- | -------------------------------------- |
+| GET    | `/`        | Root endpoint                          |
+| GET    | `/health`  | Health check                           |
+| POST   | `/compare` | Compare old and new API specifications |
+
+### Example Request
+
+Send a POST request to `/compare` with a JSON body containing both specifications:
+
+```json
+{
+  "old_spec": {
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Sample API",
+      "version": "1.0.0"
+    },
+    "paths": {}
+  },
+  "new_spec": {
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Sample API",
+      "version": "2.0.0"
+    },
+    "paths": {}
+  }
+}
+```
+
+This example demonstrates the request structure. Since both specifications contain empty paths, it does not demonstrate a detected breaking change.
+
+## Running Tests
+
+Run the automated test suite from the project root:
+
+```powershell
 python -m pytest -v
 ```
 
-The tests cover change detection, error handling, report generation logic, and identical specifications.
+The tests cover the comparison engine and FastAPI endpoints, including supported change detection and request validation.
 
-## 🔍 Example Detected Changes
+The project has **16 locally passing tests**, as verified during development.
 
-| Change                           | Classification       |
-| -------------------------------- | -------------------- |
-| API endpoint removed             | Breaking             |
-| Response field removed           | Breaking             |
-| Response field data type changed | Breaking             |
-| Request field newly required     | Potentially Breaking |
+## Continuous Integration
 
-## 📊 Example Output
+GitHub Actions is configured in:
 
 ```text
-Old API Version: 1.0.0
-New API Version: 2.0.0
-Total Changes Detected: 4
+.github/workflows/tests.yml
 ```
 
-The report also includes a description and suggested action for each detected change.
+The workflow runs when:
 
-## ⚠️ Current Scope
+* Code is pushed to the `main` branch.
+* A pull request targets the `main` branch.
 
-This is an initial implementation focused on selected OpenAPI JSON compatibility checks.
+The workflow checks out the repository, sets up Python, installs dependencies, and executes:
 
-The current implementation does not yet provide complete OpenAPI compatibility analysis. It focuses on the change types listed above.
+```powershell
+python -m pytest -v
+```
 
-## 🔮 Planned Improvements
+A successful workflow run displays a green check mark on GitHub.
 
-* Add a FastAPI backend.
-* Build a Streamlit user interface.
-* Support YAML specifications.
-* Add more schema compatibility checks.
-* Integrate automated testing with GitHub Actions.
-* Deploy the application for online access.
+## Current Limitations
 
-## 👨‍💻 Author
+* JSON specification input is currently supported by the implemented comparison workflow.
+* Full OpenAPI specification validation is not implemented.
+* Not every possible OpenAPI schema structure or compatibility rule is supported.
+* YAML parsing is not yet integrated into the comparison workflow.
+* Database persistence and authentication are not currently part of the implemented feature set.
+* The frontend currently connects to the local backend; public deployment is a future step.
+
+## Future Improvements
+
+* Add comprehensive OpenAPI schema validation.
+* Extend support for nested schemas and additional compatibility rules.
+* Add YAML specification parsing.
+* Improve detection of safe and potentially breaking changes.
+* Expand test coverage for complex specifications and edge cases.
+* Deploy the FastAPI backend and Streamlit frontend.
+* Improve report presentation and documentation.
+
+## Learning Outcomes
+
+Through this project, I practised:
+
+* Python programming and modular code organization.
+* API comparison and change-detection logic.
+* Building REST endpoints using FastAPI.
+* Request validation using Pydantic.
+* Connecting a frontend to a backend using HTTP requests.
+* Writing automated tests with pytest.
+* Using Git and GitHub for version control.
+* Setting up a GitHub Actions CI workflow.
+
+## Author
 
 **Kishan Kumar**
 
-GitHub: https://github.com/Kishankr76
+GitHub: Kishankr76
 
-## 📄 License
+---
 
-No license has been added yet. Licensing can be configured when the project is prepared for public reuse.
+*API Contract Sentinel is a learning and development project designed to explore API compatibility, automated testing, and continuous integration.*
