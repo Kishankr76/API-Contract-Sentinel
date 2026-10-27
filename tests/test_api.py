@@ -123,3 +123,66 @@ def test_compare_endpoint_rejects_empty_specifications():
     assert response.status_code == 422
     assert "old_spec cannot be empty" in response.json()["detail"][0]["msg"]
 
+def test_compare_endpoint_rejects_missing_openapi_field():
+    response = client.post(
+        "/compare",
+        json={
+            "old_spec": {
+                "info": {"title": "Old API", "version": "1.0"},
+                "paths": {},
+            },
+            "new_spec": {
+                "openapi": "3.0.0",
+                "info": {"title": "New API", "version": "2.0"},
+                "paths": {},
+            },
+        },
+    )
+
+    assert response.status_code == 422
+    assert "old_spec must contain an 'openapi' field." in response.json()["detail"][0]["msg"]
+
+
+
+
+def test_compare_endpoint_rejects_missing_info_field():
+    response = client.post(
+        "/compare",
+        json={
+            "old_spec": {
+                "openapi": "3.0.0",
+                "paths": {},
+            },
+            "new_spec": {
+                "openapi": "3.0.0",
+                "info": {"title": "New API", "version": "2.0"},
+                "paths": {},
+            },
+        },
+    )
+
+
+    assert response.status_code == 422
+    assert "old_spec must contain an 'info' object." in response.json()["detail"][0]["msg"]
+
+
+def test_compare_endpoint_rejects_missing_paths_field():
+    response = client.post(
+        "/compare",
+        json={
+            "old_spec": {
+                "openapi": "3.0.0",
+                "info": {"title": "Old API", "version": "1.0"},
+            },
+            "new_spec": {
+                "openapi": "3.0.0",
+                "info": {"title": "New API", "version": "2.0"},
+                "paths": {},
+            },
+        },
+    )
+
+
+    assert response.status_code == 422
+    assert "old_spec must contain a 'paths' object." in response.json()["detail"][0]["msg"]
+
