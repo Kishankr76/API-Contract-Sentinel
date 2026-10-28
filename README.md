@@ -159,11 +159,14 @@ For Windows PowerShell:
 .\.venv\Scripts\Activate.ps1
 ```
 
-### 4. Install dependencies
+### 4. Install Dependencies
+
+Run this command from the project root directory:
 
 ```powershell
 python -m pip install -r requirements.txt
 ```
+
 
 ### 5. Run the FastAPI backend
 
@@ -181,12 +184,23 @@ The backend will be available locally at:
 
 Keep this terminal running.
 
-## Live Demo
+### Live Deployment
 
-* **Frontend:** https://api-contract-sentinel.streamlit.app/
-* **Backend API:** https://api-contract-sentinel.onrender.com
-* **Interactive API Documentation:** https://api-contract-sentinel.onrender.com/docs
-* **Health Check:** https://api-contract-sentinel.onrender.com/health
+The application is deployed using the following services:
+
+* **Frontend:** Streamlit Community Cloud
+* **Backend:** Render
+* **API Documentation:** FastAPI Swagger UI
+
+Live links:
+
+* Frontend: https://api-contract-sentinel.streamlit.app/
+* Backend health check: https://api-contract-sentinel.onrender.com/health
+* API documentation: https://api-contract-sentinel.onrender.com/docs
+
+For local development, run both the FastAPI backend and Streamlit frontend as described above.
+
+Note: The free hosting services may sleep during inactivity, so the first request can take longer while the backend starts.
 
 
 ### 6. Run the Streamlit frontend
@@ -285,9 +299,10 @@ A successful workflow run displays a green check mark on GitHub.
 * Add YAML specification parsing.
 * Expand support for nested schemas and additional compatibility rules.
 * Improve detection of safe and potentially breaking changes.
-* Add more automated tests for malformed inputs and complex API specifications.
+* Add automated tests for malformed inputs and complex API specifications.
 * Improve report explanations and suggested fixes.
 * Consider authentication and persistent comparison history if future requirements justify them.
+
 
 
 ## Learning Outcomes
