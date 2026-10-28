@@ -163,7 +163,6 @@ For Windows PowerShell:
 
 ```powershell
 python -m pip install -r requirements.txt
-python -m pip install streamlit requests
 ```
 
 ### 5. Run the FastAPI backend
@@ -181,6 +180,14 @@ The backend will be available locally at:
 * Health check: `http://127.0.0.1:8000/health`
 
 Keep this terminal running.
+
+## Live Demo
+
+* **Frontend:** https://api-contract-sentinel.streamlit.app/
+* **Backend API:** https://api-contract-sentinel.onrender.com
+* **Interactive API Documentation:** https://api-contract-sentinel.onrender.com/docs
+* **Health Check:** https://api-contract-sentinel.onrender.com/health
+
 
 ### 6. Run the Streamlit frontend
 
@@ -264,22 +271,24 @@ A successful workflow run displays a green check mark on GitHub.
 
 ## Current Limitations
 
-* JSON specification input is currently supported by the implemented comparison workflow.
+* The comparison workflow currently accepts JSON API specifications only.
 * Full OpenAPI specification validation is not implemented.
 * Not every possible OpenAPI schema structure or compatibility rule is supported.
 * YAML parsing is not yet integrated into the comparison workflow.
-* Database persistence and authentication are not currently part of the implemented feature set.
-* The frontend currently connects to the local backend; public deployment is a future step.
+* Database persistence and authentication are not implemented.
+* Detection accuracy depends on the API structures and change types supported by the comparison engine.
+* The backend is hosted on Render and the frontend on Streamlit Community Cloud. Free hosting services may sleep during inactivity, causing delays on the first request.
+
 
 ## Future Improvements
 
-* Add comprehensive OpenAPI schema validation.
-* Extend support for nested schemas and additional compatibility rules.
 * Add YAML specification parsing.
+* Expand support for nested schemas and additional compatibility rules.
 * Improve detection of safe and potentially breaking changes.
-* Expand test coverage for complex specifications and edge cases.
-* Deploy the FastAPI backend and Streamlit frontend.
-* Improve report presentation and documentation.
+* Add more automated tests for malformed inputs and complex API specifications.
+* Improve report explanations and suggested fixes.
+* Consider authentication and persistent comparison history if future requirements justify them.
+
 
 ## Learning Outcomes
 
